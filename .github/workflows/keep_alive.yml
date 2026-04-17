@@ -1,0 +1,22 @@
+name: Keep Hugging Face Spaces Awake
+
+on:
+  schedule:
+    # Berjalan setiap jam pada menit ke-15
+    # Format: "menit jam hari bulan hari-dalam-minggu"
+    - cron: '15 * * * *'
+  workflow_dispatch: # Memungkinkan menjalankan manual untuk testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping HF Scraper and Mediaflow
+        run: |
+          echo "Pinging HF Scraper..."
+          curl -I -s https://rohmanbagus-my-scraper-api.hf.space > /dev/null
+          
+          echo "Pinging Mediaflow..."
+          curl -I -s https://rohmanbagus-nobarbae-proxy.hf.space > /dev/null
+          
+          echo "Done! Spaces are poked."
