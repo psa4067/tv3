@@ -3,21 +3,35 @@ name: Keep Hugging Face Spaces Awake
 on:
   schedule:
     # Berjalan setiap jam pada menit ke-15
-    # Format: "menit jam hari bulan hari-dalam-minggu"
     - cron: '15 * * * *'
-  workflow_dispatch: # Memungkinkan menjalankan manual untuk testing
+  workflow_dispatch: # Memungkinkan jalankan manual kapan saja
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping HF Scraper and Mediaflow via Embed
+      - name: Ping HF Spaces and Check Status
         run: |
-          echo "Pinging HF Scraper Embed..."
-          # Menggunakan URL embed langsung
-          curl -I -s https://rohmanbagus-my-scraper-api.hf.space/+ > /dev/null
+          echo "Checking HF Scraper..."
+          STATUS_SCRAPER=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-my-scraper-api.hf.space/+)
+          echo "HF Scraper Status: $STATUS_SCRAPER"
           
-          echo "Pinging Mediaflow Embed..."
-          curl -I -s https://rohmanbagus-nobarbae-proxy.hf.space/+ > /dev/null
+          echo "--------------------------------"
           
-          echo "Done! Spaces are poked via embed."
+          echo "Checking Mediaflow..."
+          STATUS_MEDIA=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-nobarbae-proxy.hf.space/+)
+          echo "Mediaflow Status: $STATUS_MEDIA"
+          
+          echo "--------------------------------"
+          
+          if [ "$STATUS_SCRAPER" -eq 200 ] || [ "$STATUS_SCRAPER" -eq 503 ]; then
+            echo "✅ HF Scraper is awake or waking up!"
+          else
+            echo "⚠️ HF Scraper might have an issue. Status: $STATUS_SCRAPER"
+          fi
+
+          if [ "$STATUS_MEDIA" -eq 200 ] || [ "$STATUS_MEDIA" -eq 503 ]; then
+            echo "✅ Mediaflow is awake or waking up!"
+          else
+            echo "⚠️ Mediaflow might have an issue. Status: $STATUS_MEDIA"
+          fi
