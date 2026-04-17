@@ -11,12 +11,13 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping HF Scraper and Mediaflow
+      - name: Ping HF Scraper and Mediaflow via Embed
         run: |
-          echo "Pinging HF Scraper..."
-          curl -I -s https://rohmanbagus-my-scraper-api.hf.space > /dev/null
+          echo "Pinging HF Scraper Embed..."
+          # Menggunakan URL embed langsung
+          curl -I -s https://rohmanbagus-my-scraper-api.hf.space/+ > /dev/null
           
-          echo "Pinging Mediaflow..."
-          curl -I -s https://rohmanbagus-nobarbae-proxy.hf.space > /dev/null
+          echo "Pinging Mediaflow Embed..."
+          curl -I -s https://rohmanbagus-nobarbae-proxy.hf.space/+ > /dev/null
           
-          echo "Done! Spaces are poked."
+          echo "Done! Spaces are poked via embed."
