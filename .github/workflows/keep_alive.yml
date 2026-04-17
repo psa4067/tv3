@@ -4,34 +4,42 @@ on:
   schedule:
     # Berjalan setiap jam pada menit ke-15
     - cron: '15 * * * *'
-  workflow_dispatch: # Memungkinkan jalankan manual kapan saja
+  workflow_dispatch: # Untuk tes manual
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping HF Spaces and Check Status
+      - name: Ping HF Spaces via Direct URL
         run: |
           echo "Checking HF Scraper..."
-          STATUS_SCRAPER=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-my-scraper-api.hf.space/+)
+          # Menggunakan Direct URL
+          STATUS_SCRAPER=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-my-scraper-api.hf.space)
           echo "HF Scraper Status: $STATUS_SCRAPER"
           
           echo "--------------------------------"
           
           echo "Checking Mediaflow..."
-          STATUS_MEDIA=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-nobarbae-proxy.hf.space/+)
+          # Menggunakan Direct URL
+          STATUS_MEDIA=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-nobarbae-proxy.hf.space)
           echo "Mediaflow Status: $STATUS_MEDIA"
           
           echo "--------------------------------"
           
-          if [ "$STATUS_SCRAPER" -eq 200 ] || [ "$STATUS_SCRAPER" -eq 503 ]; then
-            echo "✅ HF Scraper is awake or waking up!"
+          # Cek hasil untuk Scraper
+          if [ "$STATUS_SCRAPER" -ge 200 ] && [ "$STATUS_SCRAPER" -lt 400 ]; then
+            echo "✅ HF Scraper is ACTIVE (200 OK)"
+          elif [ "$STATUS_SCRAPER" -eq 503 ]; then
+            echo "⏳ HF Scraper is WAKING UP (Starting...)"
           else
-            echo "⚠️ HF Scraper might have an issue. Status: $STATUS_SCRAPER"
+            echo "❌ HF Scraper Error. Status: $STATUS_SCRAPER"
           fi
 
-          if [ "$STATUS_MEDIA" -eq 200 ] || [ "$STATUS_MEDIA" -eq 503 ]; then
-            echo "✅ Mediaflow is awake or waking up!"
+          # Cek hasil untuk Mediaflow
+          if [ "$STATUS_MEDIA" -ge 200 ] && [ "$STATUS_MEDIA" -lt 400 ]; then
+            echo "✅ Mediaflow is ACTIVE (200 OK)"
+          elif [ "$STATUS_MEDIA" -eq 503 ]; then
+            echo "⏳ Mediaflow is WAKING UP (Starting...)"
           else
-            echo "⚠️ Mediaflow might have an issue. Status: $STATUS_MEDIA"
+            echo "❌ Mediaflow Error. Status: $STATUS_MEDIA"
           fi
