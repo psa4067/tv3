@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "Checking HF Scraper..."
           # Menggunakan Direct URL
-          STATUS_SCRAPER=$(curl -s -o /dev/null -w "%{http_code}" https://rohmanbagus-my-scraper-api.hf.space)
+          STATUS_SCRAPER=$(curl -s -o /dev/null -w "%{http_code}" https://konversinvers-animeku.hf.space)
           echo "HF Scraper Status: $STATUS_SCRAPER"
           
           echo "--------------------------------"
